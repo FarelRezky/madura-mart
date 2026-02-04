@@ -4,13 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\File; // Recommended for file handling
+use Illuminate\Support\Facades\File;
 
 class ProductController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         return view('products.index', [
@@ -19,9 +16,6 @@ class ProductController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         return view('products.create', [
@@ -29,11 +23,9 @@ class ProductController extends Controller
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
+        // (This method remains the same as before)
         $validated = $request->validate([
             'serial_number' => 'required|string|max:255|unique:products,serial_number',
             'name' => 'required|string|max:255',
@@ -44,34 +36,23 @@ class ProductController extends Controller
             'picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $picturePath = null;
-        
-        // CORRECTION: Saving to 'images/products'
         if ($request->hasFile('picture')) {
             $fileName = time() . '_' . $request->file('picture')->getClientOriginalName();
             $request->file('picture')->move(public_path('images/products'), $fileName);
-            $picturePath = $fileName;
+            $validated['picture'] = $fileName;
         }
-
-        $validated['picture'] = $picturePath;
 
         Product::create($validated);
 
-        return redirect()->route('products.index')->with('success', 'Product data has been successfully saved');
+        return redirect()->route('products.index')->with('success', 'Product created successfully');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
         $product = Product::findOrFail($id);
         return view('products.show', compact('product'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id)
     {
         $product = Product::findOrFail($id);
@@ -81,9 +62,7 @@ class ProductController extends Controller
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+    // --- UPDATED UPDATE METHOD ---
     public function update(Request $request, string $id)
     {
         $request->validate([
@@ -97,49 +76,55 @@ class ProductController extends Controller
         ]);
 
         $product = Product::findOrFail($id);
-        $oldName = $product->name;
+        
+        // Start with basic data
+        $validated = $request->except(['picture', 'delete_picture', '_token', '_method']);
 
-        $validated = $request->only([
-            'serial_number',
-            'name',
-            'type',
-            'expiration_date',
-            'price',
-            'stock'
-        ]);
+        // Path to current image
+        $currentImagePath = public_path('images/products/' . $product->picture);
 
-        // Handle picture upload
-        if ($request->hasFile('picture')) {
-            // CORRECTION: Delete from 'images/products'
-            if ($product->picture && file_exists(public_path('images/products/' . $product->picture))) {
-                unlink(public_path('images/products/' . $product->picture));
+        // --- LOGIC 1: Handle Explicit Deletion Request ---
+        // This runs if the user clicked "Remove Image" in the view
+        if ($request->input('delete_picture') == '1') {
+            if (!empty($product->picture) && file_exists($currentImagePath)) {
+                unlink($currentImagePath);
             }
-            
-            // CORRECTION: Save to 'images/products'
+            // Set picture column to null in database
+            $validated['picture'] = null;
+        }
+
+        // --- LOGIC 2: Handle New File Upload ---
+        // This runs if the user selected a new file (overrides deletion if both happen)
+        if ($request->hasFile('picture')) {
+            // Delete old image if it exists and hasn't just been deleted above
+            if (!empty($product->picture) && file_exists($currentImagePath)) {
+                 unlink($currentImagePath);
+            }
+
+            // Upload new image
             $fileName = time() . '_' . $request->file('picture')->getClientOriginalName();
             $request->file('picture')->move(public_path('images/products'), $fileName);
+            
+            // Set new filename for database
             $validated['picture'] = $fileName;
         }
 
+        // Update the database record
         $product->update($validated);
 
-        return redirect()->route('products.index')->with('success', 'The Product Data, ' . $oldName . ' become ' . $request->name . ', has been successfully updated');
+        return redirect()->route('products.index')->with('success', 'Product updated successfully');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
         $product = Product::findOrFail($id);
-
-        // CORRECTION: Delete from 'images/products'
-        if ($product->picture && file_exists(public_path('images/products/' . $product->picture))) {
-            unlink(public_path('images/products/' . $product->picture));
+        $imagePath = public_path('images/products/' . $product->picture);
+        
+        if ($product->picture && file_exists($imagePath)) {
+            unlink($imagePath);
         }
 
         $product->delete();
-
-        return redirect()->route('products.index')->with('success', 'Product data has been successfully deleted!');
+        return redirect()->route('products.index')->with('success', 'Product deleted successfully');
     }
 }

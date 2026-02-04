@@ -6,6 +6,8 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\DistributorController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\PurchaseController;
+use App\Models\Purchase;
 
 Route::get('/', function () {
     return view('welcome', ['title' => 'Welcome']);
@@ -34,5 +36,6 @@ Route::middleware('auth')->group(function () {
     Route::resource('test', TestController::class);
     Route::resource('distributors', DistributorController::class);
     Route::resource('products', ProductController::class);
+    Route::resource('purchases', PurchaseController::class);
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });

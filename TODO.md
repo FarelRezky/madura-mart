@@ -9,6 +9,14 @@
 - [ ] Test image upload and display functionality
 - [ ] Update other related views (create, edit) if necessary for consistency
 
+# TODO: Build Create Purchase Page
+
+## Tasks
+- [x] Update PurchaseDetail model with fillable fields and relationships
+- [x] Update PurchaseController store method to handle purchase details
+- [x] Update create.blade.php with dynamic product rows and calculations
+- [x] Add JavaScript for adding/removing product rows and calculating totals
+
 ## Notes
 - Changed storage from storage/app/public/products to public/images/photos for direct access
 - Updated view to use asset('images/' . $item->picture) for image display

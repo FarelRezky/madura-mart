@@ -386,6 +386,7 @@
             form.addEventListener('submit', function(event) {
                 // We perform a basic check before alerting, but full validation happens on backend
                 event.preventDefault();
+                const formElement = this; // Capture the form reference
                 Swal.fire({
                     title: 'Create Product?',
                     text: "Please confirm the details are correct.",
@@ -398,7 +399,7 @@
                     reverseButtons: true
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        this.submit();
+                        formElement.submit();
                     }
                 });
             });

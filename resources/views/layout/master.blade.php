@@ -96,6 +96,10 @@
         @yield('products')
     @endif
 
+    @if(Request::is('purchases*'))
+        @yield('purchase')
+    @endif
+
     @yield('content')
 
 </main>
