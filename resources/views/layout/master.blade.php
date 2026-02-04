@@ -92,6 +92,10 @@
         @yield('distributor')
     @endif
 
+    @if(Request::is('products*'))
+        @yield('products')
+    @endif
+
     @yield('content')
 
 </main>

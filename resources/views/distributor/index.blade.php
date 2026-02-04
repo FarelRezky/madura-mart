@@ -5,97 +5,222 @@
 @endsection
 
 @section('distributor')
-    @if (session('success'))
-        <div class="alert alert-success alert-dismissible fade show mx-4 mt-3" role="alert">
-            <span class="alert-icon"><i class="ni ni-like-2"></i></span>
-            <span class="alert-text"><strong>Success!</strong> {{ session('success') }}</span>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    @endif
+    {{-- Ensure Icons Load --}}
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 
-    @if (session('error'))
-        <div class="alert alert-danger alert-dismissible fade show mx-4 mt-3" role="alert">
-            <span class="alert-icon"><i class="ni ni-support-16"></i></span>
-            <span class="alert-text"><strong>Error!</strong> {{ session('error') }}</span>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    @endif
+    {{-- Custom CSS for Premium Look --}}
+    <style>
+        :root {
+            --soft-shadow: 0 20px 27px 0 rgba(0, 0, 0, 0.05);
+            --hover-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --primary-gradient: linear-gradient(310deg, #2152ff 0%, #21d4fd 100%);
+        }
 
-    <div class="container-fluid py-4">
+        .bg-gray-100 { background-color: #f8f9fa !important; }
+        
+        /* Modern Card */
+        .card-modern {
+            border: none;
+            border-radius: 24px;
+            box-shadow: var(--soft-shadow);
+            background: #fff;
+            transition: transform 0.2s;
+            overflow: hidden;
+        }
+
+        /* Table Styling */
+        .table-modern thead th {
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            color: #8392ab;
+            border-bottom: 1px solid #edf2f7;
+            padding: 1.5rem 1rem;
+            background-color: #f8f9fa;
+            font-weight: 700;
+        }
+
+        .table-modern tbody tr {
+            transition: all 0.2s ease-in-out;
+            border-bottom: 1px solid #f1f1f1;
+        }
+
+        .table-modern tbody tr:hover {
+            background-color: #fafbfc;
+            transform: scale(1.002);
+            box-shadow: var(--hover-shadow);
+            z-index: 10;
+            position: relative;
+        }
+
+        .table-modern td {
+            padding: 1.2rem 1rem;
+            vertical-align: middle;
+            color: #495057;
+            font-size: 0.9rem;
+        }
+
+        /* Avatar / Icon Styling */
+        .avatar-initial {
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            background: var(--primary-gradient);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 6px rgba(33, 82, 255, 0.25);
+        }
+
+        /* Action Buttons */
+        .btn-action {
+            width: 35px;
+            height: 35px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            transition: all 0.2s;
+            border: none;
+            background: transparent;
+            color: #8392ab;
+        }
+
+        .btn-action:hover {
+            background-color: #f0f2f5;
+            transform: translateY(-2px);
+        }
+
+        .btn-action.edit:hover { color: #fb6340; background-color: rgba(251, 99, 64, 0.1); }
+        .btn-action.delete:hover { color: #f5365c; background-color: rgba(245, 54, 92, 0.1); }
+
+        /* Floating Alert */
+        .floating-alert {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            min-width: 320px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            animation: slideInRight 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: none;
+        }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(100%); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+    </style>
+
+    <div class="container-fluid py-4" style="min-height: 85vh;">
+        
+        {{-- Floating Alerts --}}
+        @if (session('success'))
+            <div class="alert alert-success floating-alert text-white d-flex align-items-center" role="alert" style="background: linear-gradient(310deg, #2dce89 0%, #2dcecc 100%);">
+                <span class="alert-icon me-3"><i class="fas fa-check-circle fa-lg"></i></span>
+                <span class="alert-text"><strong>Success!</strong> {{ session('success') }}</span>
+                <button type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
+        @if (session('error'))
+            <div class="alert alert-danger floating-alert text-white d-flex align-items-center" role="alert" style="background: linear-gradient(310deg, #f5365c 0%, #f56036 100%);">
+                <span class="alert-icon me-3"><i class="fas fa-exclamation-circle fa-lg"></i></span>
+                <span class="alert-text"><strong>Error!</strong> {{ session('error') }}</span>
+                <button type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
         <div class="row">
             <div class="col-12">
-                <div class="card mb-4">
-                    <div class="card-header pb-0">
-                        <h6>{{ $title }} table</h6>
+                <div class="card card-modern mb-4">
+                    {{-- Header Section --}}
+                    <div class="card-header pb-0 bg-white border-0 pt-4 px-4">
+                        <div class="d-lg-flex justify-content-between align-items-center">
+                            <div>
+                                <h5 class="mb-0 font-weight-bolder text-dark">{{ $title }} Management</h5>
+                                <p class="text-sm text-muted mb-0">
+                                    View and manage your verified distributors.
+                                </p>
+                            </div>
+                            <div class="mt-3 mt-lg-0 text-end">
+                                <a href="{{ route('distributors.create') }}" class="btn bg-gradient-dark btn-sm mb-0 shadow-lg px-4 py-2" id="btn-add-distributor" style="border-radius: 8px;">
+                                    <i class="fas fa-plus me-2"></i>Add New Distributor
+                                </a>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="card-body px-0 pt-0 pb-2">
+                    {{-- Table Section --}}
+                    <div class="card-body px-0 pt-3 pb-2">
                         <div class="table-responsive p-0">
-                            <table class="table align-items-center mb-0">
+                            <table class="table table-modern align-items-center mb-0">
                                 <thead>
                                     <tr>
-                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                            No.
-                                        </th>
-                                        <th
-                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                            Distributor Name
-                                        </th>
-                                        <th
-                                            class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                            Address
-                                        </th>
-                                        <th
-                                            class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                            Phone Number
-                                        </th>
-                                        <th
-                                            class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                            Action
-                                        </th>
+                                        <th class="text-center opacity-7" style="width: 5%">No.</th>
+                                        <th class="ps-4 opacity-7" style="width: 25%">Distributor Name</th>
+                                        <th class="ps-2 opacity-7" style="width: 35%">Address</th>
+                                        <th class="text-center opacity-7" style="width: 20%">Contact</th>
+                                        <th class="text-center opacity-7" style="width: 15%">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($distributors as $no => $item)
                                         <tr>
-                                            <td class="align-middle text-center">
-                                                <span
-                                                    class="text-secondary text-xs font-weight-bold">{{ $no + 1 }}</span>
+                                            {{-- 1. Number --}}
+                                            <td class="text-center">
+                                                <span class="text-secondary text-xs font-weight-bold">{{ $no + 1 }}</span>
                                             </td>
-                                            <td class="align-middle">
-                                                <span
-                                                    class="text-secondary text-xs font-weight-bold">{{ $item->name }}</span>
+
+                                            {{-- 2. Name & Avatar --}}
+                                            <td>
+                                                <div class="d-flex px-3 py-1 align-items-center">
+                                                    <div class="avatar-initial me-3">
+                                                        {{ substr($item->name, 0, 1) }}
+                                                    </div>
+                                                    <div class="d-flex flex-column justify-content-center">
+                                                        <h6 class="mb-0 text-sm font-weight-bold text-dark">{{ $item->name }}</h6>
+                                                        <p class="text-xs text-secondary mb-0">ID: #DST-{{ str_pad($item->id, 4, '0', STR_PAD_LEFT) }}</p>
+                                                    </div>
+                                                </div>
                                             </td>
-                                            <td class="align-middle text-center">
-                                                <span
-                                                    class="text-secondary text-xs font-weight-bold">{{ $item->address }}</span>
+
+                                            {{-- 3. Address --}}
+                                            <td>
+                                                <p class="text-xs font-weight-bold mb-0 text-secondary text-wrap" style="max-width: 350px; line-height: 1.5;">
+                                                    <i class="fas fa-map-marker-alt me-1 text-xs"></i> {{ $item->address }}
+                                                </p>
                                             </td>
+
+                                            {{-- 4. Phone Number --}}
                                             <td class="align-middle text-center">
-                                                <span
-                                                    class="text-secondary text-xs font-weight-bold">{{ $item->phone_number }}</span>
+                                                <span class="badge bg-gradient-secondary badge-sm" style="font-weight: 500; letter-spacing: 0.5px;">
+                                                    <i class="fas fa-phone me-1"></i> {{ $item->phone_number }}
+                                                </span>
                                             </td>
+
+                                            {{-- 5. Actions --}}
                                             <td class="align-middle text-center">
-                                                <div class="d-flex justify-content-center align-items-center gap-2">
-                                                    {{-- Tombol Edit --}}
-                                                    <a href="{{ route('distributors.edit', $item->id) }}"
-                                                        class="btn btn-link text-warning text-gradient px-3 mb-0 confirm-edit"
-                                                        data-bs-toggle="tooltip" data-bs-title="Edit Data">
-                                                        <i class="ni ni-ruler-pencil me-2"></i>Edit
+                                                <div class="d-flex justify-content-center gap-2">
+                                                    <a href="{{ route('distributors.edit', $item->id) }}" 
+                                                       class="btn-action edit confirm-edit" 
+                                                       data-bs-toggle="tooltip" 
+                                                       data-bs-title="Edit Distributor">
+                                                        <i class="fas fa-edit text-sm"></i>
                                                     </a>
 
-                                                    {{-- Tombol Delete --}}
-                                                    <form action="{{ route('distributors.destroy', $item->id) }}"
-                                                        method="POST" class="d-inline delete-form">
+                                                    <form action="{{ route('distributors.destroy', $item->id) }}" method="POST" class="d-inline delete-form">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="button"
-                                                            class="btn btn-link text-danger text-gradient px-3 mb-0 btn-delete"
-                                                            data-bs-toggle="tooltip" data-bs-title="Hapus Data">
-                                                            <i class="ni ni-fat-remove me-2"></i>Delete
+                                                        <button type="button" 
+                                                                class="btn-action delete btn-delete" 
+                                                                data-bs-toggle="tooltip" 
+                                                                data-bs-title="Delete Distributor">
+                                                            <i class="fas fa-trash-alt text-sm"></i>
                                                         </button>
                                                     </form>
                                                 </div>
@@ -105,402 +230,101 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class="px-4 py-3 text-end">
-                            <a class="btn bg-gradient-dark mb-0" id="btn-add-distributor"
-                                href="{{ route('distributors.create') }}">
-                                <i class="fas fa-plus"></i>&nbsp;&nbsp;Add New Distributor
-                            </a>
-                        </div>
+                        
+                        {{-- Empty State --}}
+                        @if(count($distributors) == 0)
+                            <div class="text-center py-5">
+                                <div class="mb-3">
+                                    <i class="ni ni-delivery-fast text-secondary opacity-3" style="font-size: 3rem;"></i>
+                                </div>
+                                <h6 class="text-secondary font-weight-normal">No distributors found</h6>
+                                <a href="{{ route('distributors.create') }}" class="btn btn-link text-primary text-gradient" id="btn-add-distributor-empty">
+                                    Register your first distributor
+                                </a>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
         </div>
 
-        {{-- Projects Table (Code from user input kept intact) --}}
-        <div class="row">
-            <div class="col-12">
-                <div class="card mb-4">
-                    <div class="card-header pb-0">
-                        <h6>Projects table</h6>
-                    </div>
-                    <div class="card-body px-0 pt-0 pb-2">
-                        <div class="table-responsive p-0">
-                            <table class="table align-items-center justify-content-center mb-0">
-                                <thead>
-                                    <tr>
-                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                            Project</th>
-                                        <th
-                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                            Budget</th>
-                                        <th
-                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                            Status</th>
-                                        <th
-                                            class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7 ps-2">
-                                            Completion</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <div class="d-flex px-2">
-                                                <div>
-                                                    <img src="layout/assets/img/small-logos/logo-spotify.svg"
-                                                        class="avatar avatar-sm rounded-circle me-2" alt="spotify">
-                                                </div>
-                                                <div class="my-auto">
-                                                    <h6 class="mb-0 text-sm">Spotify</h6>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <p class="text-sm font-weight-bold mb-0">$2,500</p>
-                                        </td>
-                                        <td>
-                                            <span class="text-xs font-weight-bold">working</span>
-                                        </td>
-                                        <td class="align-middle text-center">
-                                            <div class="d-flex align-items-center justify-content-center">
-                                                <span class="me-2 text-xs font-weight-bold">60%</span>
-                                                <div>
-                                                    <div class="progress">
-                                                        <div class="progress-bar bg-gradient-info" role="progressbar"
-                                                            aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
-                                                            style="width: 60%;"></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="align-middle">
-                                            <button class="btn btn-link text-secondary mb-0">
-                                                <i class="fa fa-ellipsis-v text-xs"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="d-flex px-2">
-                                                <div>
-                                                    <img src="layout/assets/img/small-logos/logo-invision.svg"
-                                                        class="avatar avatar-sm rounded-circle me-2" alt="invision">
-                                                </div>
-                                                <div class="my-auto">
-                                                    <h6 class="mb-0 text-sm">Invision</h6>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <p class="text-sm font-weight-bold mb-0">$5,000</p>
-                                        </td>
-                                        <td>
-                                            <span class="text-xs font-weight-bold">done</span>
-                                        </td>
-                                        <td class="align-middle text-center">
-                                            <div class="d-flex align-items-center justify-content-center">
-                                                <span class="me-2 text-xs font-weight-bold">100%</span>
-                                                <div>
-                                                    <div class="progress">
-                                                        <div class="progress-bar bg-gradient-success" role="progressbar"
-                                                            aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"
-                                                            style="width: 100%;"></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="align-middle">
-                                            <button class="btn btn-link text-secondary mb-0" aria-haspopup="true"
-                                                aria-expanded="false">
-                                                <i class="fa fa-ellipsis-v text-xs"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="d-flex px-2">
-                                                <div>
-                                                    <img src="layout/assets/img/small-logos/logo-jira.svg"
-                                                        class="avatar avatar-sm rounded-circle me-2" alt="jira">
-                                                </div>
-                                                <div class="my-auto">
-                                                    <h6 class="mb-0 text-sm">Jira</h6>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <p class="text-sm font-weight-bold mb-0">$3,400</p>
-                                        </td>
-                                        <td>
-                                            <span class="text-xs font-weight-bold">canceled</span>
-                                        </td>
-                                        <td class="align-middle text-center">
-                                            <div class="d-flex align-items-center justify-content-center">
-                                                <span class="me-2 text-xs font-weight-bold">30%</span>
-                                                <div>
-                                                    <div class="progress">
-                                                        <div class="progress-bar bg-gradient-danger" role="progressbar"
-                                                            aria-valuenow="30" aria-valuemin="0" aria-valuemax="30"
-                                                            style="width: 30%;"></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="align-middle">
-                                            <button class="btn btn-link text-secondary mb-0" aria-haspopup="true"
-                                                aria-expanded="false">
-                                                <i class="fa fa-ellipsis-v text-xs"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="d-flex px-2">
-                                                <div>
-                                                    <img src="layout/assets/img/small-logos/logo-slack.svg"
-                                                        class="avatar avatar-sm rounded-circle me-2" alt="slack">
-                                                </div>
-                                                <div class="my-auto">
-                                                    <h6 class="mb-0 text-sm">Slack</h6>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <p class="text-sm font-weight-bold mb-0">$1,000</p>
-                                        </td>
-                                        <td>
-                                            <span class="text-xs font-weight-bold">canceled</span>
-                                        </td>
-                                        <td class="align-middle text-center">
-                                            <div class="d-flex align-items-center justify-content-center">
-                                                <span class="me-2 text-xs font-weight-bold">0%</span>
-                                                <div>
-                                                    <div class="progress">
-                                                        <div class="progress-bar bg-gradient-success" role="progressbar"
-                                                            aria-valuenow="0" aria-valuemin="0" aria-valuemax="0"
-                                                            style="width: 0%;"></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="align-middle">
-                                            <button class="btn btn-link text-secondary mb-0" aria-haspopup="true"
-                                                aria-expanded="false">
-                                                <i class="fa fa-ellipsis-v text-xs"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="d-flex px-2">
-                                                <div>
-                                                    <img src="layout/assets/img/small-logos/logo-webdev.svg"
-                                                        class="avatar avatar-sm rounded-circle me-2" alt="webdev">
-                                                </div>
-                                                <div class="my-auto">
-                                                    <h6 class="mb-0 text-sm">Webdev</h6>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <p class="text-sm font-weight-bold mb-0">$14,000</p>
-                                        </td>
-                                        <td>
-                                            <span class="text-xs font-weight-bold">working</span>
-                                        </td>
-                                        <td class="align-middle text-center">
-                                            <div class="d-flex align-items-center justify-content-center">
-                                                <span class="me-2 text-xs font-weight-bold">80%</span>
-                                                <div>
-                                                    <div class="progress">
-                                                        <div class="progress-bar bg-gradient-info" role="progressbar"
-                                                            aria-valuenow="80" aria-valuemin="0" aria-valuemax="80"
-                                                            style="width: 80%;"></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="align-middle">
-                                            <button class="btn btn-link text-secondary mb-0" aria-haspopup="true"
-                                                aria-expanded="false">
-                                                <i class="fa fa-ellipsis-v text-xs"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="d-flex px-2">
-                                                <div>
-                                                    <img src="layout/assets/img/small-logos/logo-xd.svg"
-                                                        class="avatar avatar-sm rounded-circle me-2" alt="xd">
-                                                </div>
-                                                <div class="my-auto">
-                                                    <h6 class="mb-0 text-sm">Adobe XD</h6>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <p class="text-sm font-weight-bold mb-0">$2,300</p>
-                                        </td>
-                                        <td>
-                                            <span class="text-xs font-weight-bold">done</span>
-                                        </td>
-                                        <td class="align-middle text-center">
-                                            <div class="d-flex align-items-center justify-content-center">
-                                                <span class="me-2 text-xs font-weight-bold">100%</span>
-                                                <div>
-                                                    <div class="progress">
-                                                        <div class="progress-bar bg-gradient-success" role="progressbar"
-                                                            aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"
-                                                            style="width: 100%;"></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="align-middle">
-                                            <button class="btn btn-link text-secondary mb-0" aria-haspopup="true"
-                                                aria-expanded="false">
-                                                <i class="fa fa-ellipsis-v text-xs"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <footer class="footer pt-3">
+        {{-- Footer --}}
+        <footer class="footer pt-3 mt-auto">
             <div class="container-fluid">
                 <div class="row align-items-center justify-content-lg-between">
                     <div class="col-lg-6 mb-lg-0 mb-4">
                         <div class="copyright text-center text-sm text-muted text-lg-start">
-                            ©
-                            <script>
-                                document.write(new Date().getFullYear())
-                            </script>,
-                            made with <i class="fa fa-heart"></i> by
-                            <a href="https://www.creative-tim.com" class="font-weight-bold" target="_blank">Creative
-                                Tim</a>
-                            for a better web.
+                            © <script>document.write(new Date().getFullYear())</script>,
+                            Inventory System made with <i class="fa fa-heart text-danger"></i> by
+                            <a href="#" class="font-weight-bold" target="_blank">Creative Tim</a>
                         </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <ul class="nav nav-footer justify-content-center justify-content-lg-end">
-                            <li class="nav-item">
-                                <a href="https://www.creative-tim.com" class="nav-link text-muted"
-                                    target="_blank">Creative Tim</a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="https://www.creative-tim.com/presentation" class="nav-link text-muted"
-                                    target="_blank">About Us</a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="https://www.creative-tim.com/blog" class="nav-link text-muted"
-                                    target="_blank">Blog</a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="https://www.creative-tim.com/license" class="nav-link pe-0 text-muted"
-                                    target="_blank">License</a>
-                            </li>
-                        </ul>
                     </div>
                 </div>
             </div>
         </footer>
     </div>
 
-    <style>
-        .dropdown-item {
-            cursor: pointer;
-            background: none;
-            border: none;
-            width: 100%;
-            text-align: left;
-            padding: 0.5rem 1rem;
-            transition: all 0.3s ease;
-        }
-
-        .dropdown-item:hover {
-            background-color: rgba(0, 0, 0, 0.05);
-        }
-
-        .dropdown-item.text-danger:hover {
-            background-color: rgba(255, 0, 0, 0.1);
-        }
-
-        .dropdown-item button {
-            background: none;
-            border: none;
-            padding: 0;
-            width: 100%;
-        }
-
-        .badge-sm {
-            padding: 0.25rem 0.5rem;
-            font-size: 0.7rem;
-        }
-    </style>
-
-    <!-- SweetAlert2 Library -->
+    {{-- Script Section --}}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    <script>
-        // Auto hide alerts after 5 seconds
-        setTimeout(function() {
-            const alerts = document.querySelectorAll('.alert');
-            alerts.forEach(function(alert) {
-                const bsAlert = new bootstrap.Alert(alert);
-                bsAlert.close();
-            });
-        }, 5000);
-    </script>
-
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // --- Logika untuk Tombol Delete ---
-            const deleteButtons = document.querySelectorAll('.btn-delete');
+            // Initialize Bootstrap Tooltips
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl)
+            });
 
-            deleteButtons.forEach(button => {
+            // Auto hide floating alerts
+            setTimeout(function() {
+                const alerts = document.querySelectorAll('.floating-alert');
+                alerts.forEach(function(alert) {
+                    alert.classList.remove('show');
+                    alert.style.opacity = '0';
+                    setTimeout(() => alert.remove(), 500); 
+                });
+            }, 5000);
+
+            // SweetAlert Configuration
+            const swalCustom = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn bg-gradient-dark mx-2',
+                    cancelButton: 'btn btn-light mx-2'
+                },
+                buttonsStyling: false
+            });
+
+            // Delete Logic
+            document.querySelectorAll('.btn-delete').forEach(button => {
                 button.addEventListener('click', function(e) {
                     const form = this.closest('form');
-
-                    Swal.fire({
-                        title: 'Apakah Anda yakin?',
-                        text: "Data distributor ini akan dihapus secara permanen!",
+                    swalCustom.fire({
+                        title: 'Are you sure?',
+                        text: "This distributor record will be permanently deleted!",
                         icon: 'warning',
                         showCancelButton: true,
-                        confirmButtonColor: '#344767', // Warna merah khas 'danger'
-                        cancelButtonColor: '#82d616', // Warna hijau khas 'success'
-                        confirmButtonText: 'Ya, hapus!',
-                        cancelButtonText: 'Batal'
+                        confirmButtonText: 'Yes, delete it!',
+                        cancelButtonText: 'Cancel',
+                        reverseButtons: true
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            form.submit(); // Eksekusi penghapusan jika dikonfirmasi
+                            form.submit();
                         }
                     });
                 });
             });
 
-            // --- Logika untuk Tombol Edit (Jika diperlukan) ---
-            const editLinks = document.querySelectorAll('.confirm-edit');
-
-            editLinks.forEach(link => {
+            // Edit Logic
+            document.querySelectorAll('.confirm-edit').forEach(link => {
                 link.addEventListener('click', function(e) {
-                    e.preventDefault(); // Hentikan navigasi langsung
+                    e.preventDefault();
                     const url = this.getAttribute('href');
-
-                    Swal.fire({
-                        title: 'Edit Data?',
-                        text: "Anda akan diarahkan ke halaman pengubahan data.",
-                        icon: 'question',
+                    swalCustom.fire({
+                        title: 'Edit Distributor?',
+                        text: "You will be redirected to the editing form.",
+                        icon: 'info',
                         showCancelButton: true,
-                        confirmButtonColor: '#344767',
-                        cancelButtonColor: '#6c757d',
-                        confirmButtonText: 'Ya, Lanjutkan',
-                        cancelButtonText: 'Kembali'
+                        confirmButtonText: 'Yes, Edit',
+                        cancelButtonText: 'Cancel'
                     }).then((result) => {
                         if (result.isConfirmed) {
                             window.location.href = url;
@@ -508,34 +332,27 @@
                     });
                 });
             });
-        });
-    </script>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const btnAdd = document.getElementById('btn-add-distributor');
-
-            if (btnAdd) {
-                btnAdd.addEventListener('click', function(e) {
-                    e.preventDefault(); // Menahan link agar tidak langsung pindah halaman
-                    const targetUrl = this.getAttribute('href');
-
-                    Swal.fire({
-                        title: 'Tambah Distributor Baru?',
-                        text: "Anda akan diarahkan ke formulir pengisian data distributor.",
-                        icon: 'info',
+            // Add Logic
+            const addBtns = document.querySelectorAll('#btn-add-distributor, #btn-add-distributor-empty');
+            addBtns.forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const url = this.getAttribute('href');
+                    swalCustom.fire({
+                        title: 'New Distributor',
+                        text: "Register a new distributor partner?",
+                        icon: 'question',
                         showCancelButton: true,
-                        confirmButtonColor: '#344767', // Warna gelap sesuai tema gradient-dark
-                        cancelButtonColor: '#6c757d',
-                        confirmButtonText: 'Ya, Lanjutkan',
-                        cancelButtonText: 'Batal',
+                        confirmButtonText: 'Yes, Register',
+                        cancelButtonText: 'Cancel'
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            window.location.href = targetUrl; // Navigasi manual jika klik 'Ya'
+                            window.location.href = url;
                         }
                     });
                 });
-            }
+            });
         });
     </script>
 @endsection

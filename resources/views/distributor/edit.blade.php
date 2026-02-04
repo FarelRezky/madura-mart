@@ -15,7 +15,6 @@
                         <h6>Edit Distributor</h6>
                     </div>
                     <div class="card-body px-0 pt-0 pb-2">
-
                         {{-- Menampilkan Error Validasi (Wajib ada agar user tahu jika input salah/duplikat dari controller) --}}
                         @if ($errors->any())
                             <div class="alert alert-danger mx-4 mt-3">
@@ -27,39 +26,68 @@
                             </div>
                         @endif
 
-                        {{-- Form Start --}}
-                        {{-- PENTING: Saya menambahkan id="edit-form" agar bisa dipanggil di JavaScript --}}
-                        <form id="edit-form" action="{{ route('distributors.update', $distributor->id) }}" method="POST"
-                            class="p-4">
-                            @csrf
-                            @method('PUT') {{-- Method PUT untuk Update data --}}
+                        <div class="row align-items-center">
+                            <div class="col-md-5 text-center mb-4 mb-md-0">
+                                <div class="position-relative">
+                                    <img src="{{ asset('images/makise.png') }}"
+                                         alt="Illustration"
+                                         class="img-fluid border-radius-lg shadow-sm"
+                                         style="max-height: 450px; width: 100%; object-fit: cover;">
 
-                            <div class="form-group">
-                                <label for="name">Nama Distributor</label>
-                                <input type="text" class="form-control" id="name" name="name"
-                                    value="{{ old('name', $distributor->name) }}" required>
+                                    <div class="mt-3 text-sm text-muted">
+                                        <em>Edit Distributor Details 🎶</em>
+                                    </div>
+                                </div>
                             </div>
 
-                            <div class="form-group">
-                                <label for="address">Alamat</label>
-                                <textarea class="form-control" id="address" name="address" rows="3" required>{{ old('address', $distributor->address) }}</textarea>
-                            </div>
+                            <div class="col-md-7">
+                                <div class="p-3">
+                                    {{-- Form Start --}}
+                                    {{-- PENTING: Saya menambahkan id="edit-form" agar bisa dipanggil di JavaScript --}}
+                                    <form id="edit-form" action="{{ route('distributors.update', $distributor->id) }}" method="POST">
+                                        @csrf
+                                        @method('PUT') {{-- Method PUT untuk Update data --}}
 
-                            <div class="form-group">
-                                <label for="phone_number">Nomor Telepon</label>
-                                <input type="text" class="form-control" id="phone_number" name="phone_number"
-                                    value="{{ old('phone_number', $distributor->phone_number) }}" required>
-                            </div>
-                            <div class="d-flex justify-content-end mt-4">
-                                {{-- Tambahkan 'me-2' di sini untuk jarak ke kanan --}}
-                                <a href="#" onclick="confirmCancel(event)"
-                                    class="btn bg-gradient-light mt-4 mb-0 me-2">Batal</a>
+                                        <div class="form-group">
+                                            <label for="name" data-bs-toggle="tooltip" data-bs-placement="top" title="Enter the distributor's full name">
+                                                <i class="fas fa-user me-2"></i>Nama Distributor
+                                            </label>
+                                            <input type="text" class="form-control" id="name" name="name"
+                                                value="{{ old('name', $distributor->name) }}" required>
+                                            <div class="valid-feedback">Looks good!</div>
+                                            <div class="invalid-feedback">Please provide a valid name.</div>
+                                        </div>
 
-                                <button type="submit" class="btn bg-gradient-dark mt-4 mb-0">Simpan Perubahan</button>
-                            </div>
-                        </form>
-                        {{-- Form End --}}
+                                        <div class="form-group">
+                                            <label for="address" data-bs-toggle="tooltip" data-bs-placement="top" title="Enter the complete address">
+                                                <i class="fas fa-map-marker-alt me-2"></i>Alamat
+                                            </label>
+                                            <textarea class="form-control" id="address" name="address" rows="3" required>{{ old('address', $distributor->address) }}</textarea>
+                                            <div class="valid-feedback">Looks good!</div>
+                                            <div class="invalid-feedback">Please provide a valid address.</div>
+                                        </div>
 
+                                        <div class="form-group">
+                                            <label for="phone_number" data-bs-toggle="tooltip" data-bs-placement="top" title="Enter a valid phone number">
+                                                <i class="fas fa-phone me-2"></i>Nomor Telepon
+                                            </label>
+                                            <input type="text" class="form-control" id="phone_number" name="phone_number"
+                                                value="{{ old('phone_number', $distributor->phone_number) }}" required>
+                                            <div class="valid-feedback">Looks good!</div>
+                                            <div class="invalid-feedback">Please provide a valid phone number.</div>
+                                        </div>
+
+                                        <div class="text-end">
+                                            <a href="#" onclick="confirmCancel(event)"
+                                                class="btn bg-gradient-light mt-4 mb-0 me-2 hover-effect">Batal</a>
+
+                                            <button type="submit" class="btn bg-gradient-dark mt-4 mb-0 hover-effect">Simpan Perubahan</button>
+                                        </div>
+                                    </form>
+                                    {{-- Form End --}}
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -84,8 +112,38 @@
         </footer>
     </div>
 
+    {{-- Custom Styles for Enhanced UI --}}
+    <style>
+        .hover-effect {
+            transition: all 0.3s ease;
+        }
+        .hover-effect:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .form-control:focus {
+            border-color: #344767;
+            box-shadow: 0 0 0 0.2rem rgba(52, 71, 103, 0.25);
+        }
+        .valid-feedback, .invalid-feedback {
+            display: none;
+        }
+        .was-validated .form-control:valid ~ .valid-feedback {
+            display: block;
+        }
+        .was-validated .form-control:invalid ~ .invalid-feedback {
+            display: block;
+        }
+    </style>
+
     {{-- Script SweetAlert --}}
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    @if (session('duplikat'))
+    <script>
+        Swal.fire("Duplicated Data!", "{{ session('duplikat') }}", "error");
+    </script>
+    @endif
 
     <script>
         // 1. Fungsi Konfirmasi Batal (Cancel)

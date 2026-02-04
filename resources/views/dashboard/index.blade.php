@@ -9,7 +9,7 @@
             <span class="alert-icon"><i class="ni ni-like-2"></i></span>
             <span class="alert-text"><strong>Success!</strong> {{ session('success') }}</span>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
+                <span aria-hidden="true">&times;</span>vvvvvvvv
             </button>
         </div>
     @endif

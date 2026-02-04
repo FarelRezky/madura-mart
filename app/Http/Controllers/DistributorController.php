@@ -38,6 +38,15 @@ class DistributorController extends Controller
             'phone_number' => 'required|max:30',
         ]);
 
+        $cekDuplikat = Distributor::where('name', $request->name)
+            ->where('address', $request->address)
+            ->where('phone_number', $request->phone_number)
+            ->first();
+
+        if ($cekDuplikat) {
+            return redirect()->route('distributors.create')->with('duplikat', 'Distributor ' . $request->name . ' data with the same address ' . $request->address . ' and phone number ' . $request->phone_number . ' already exists. Please use different data.');
+        }
+
         Distributor::create($validated);
 
         return redirect()->route('distributors.index')->with('success', 'Data berhasil disimpan');
@@ -66,7 +75,7 @@ class DistributorController extends Controller
             ->first();
 
         if ($cekDuplikat) {
-            return redirect()->route('distributors.edit', $id)->with('error', 'Distributor ' . $request->name . ' data with the same address ' . $request->address . ' and phone number ' . $request->phone_number . ' already exists. Please use different data.');
+            return redirect()->route('distributors.create', $id)->with('error', 'Distributor ' . $request->name . ' data with the same address ' . $request->address . ' and phone number ' . $request->phone_number . ' already exists. Please use different data.');
         }
 
         $distributor->update([
