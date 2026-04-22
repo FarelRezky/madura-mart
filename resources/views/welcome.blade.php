@@ -66,8 +66,8 @@
                             </span>
                             <span>
                                 Go to my Github
-                                <a href="https://github.com/shiki-12" target="_blank" class="inline-flex items-center space-x-1 font-medium underline underline-offset-4 text-[#f53003] dark:text-[#FF4433] ml-1">
-                                    <span>Shiki-12</span>
+                                <a href="https://github.com/FarelRezky" target="_blank" class="inline-flex items-center space-x-1 font-medium underline underline-offset-4 text-[#f53003] dark:text-[#FF4433] ml-1">
+                                    <span>FarelRezky</span>
                                     <svg
                                         width="10"
                                         height="11"

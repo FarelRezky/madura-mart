@@ -6,44 +6,35 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('purchase_details', function (Blueprint $table) {
-        $table->id();
+            $table->id();
+            $table->string('note_number_purchase', 15)->nullable();
+            $table->string('serial_number_product', 20)->nullable();
+            $table->bigInteger('purchase_price')->default(0);
+            $table->bigInteger('selling_price')->default(0);
+            $table->smallInteger('selling_margin')->default(0);
+            $table->integer('purchase_amount')->default(0);
+            $table->bigInteger('subtotal')->default(0);
+            $table->date('expired_date')->nullable();
 
-        // CHANGED: Use string() to match the 'note_number' column type
-        $table->string('note_number_purchase', 15)->nullable();
+            $table->foreign('note_number_purchase')
+                  ->references('note_number')
+                  ->on('purchases')
+                  ->onUpdate('cascade')
+                  ->onDelete('cascade');
 
-        // CHANGED: Use string() to match the 'serial_number' column type
-        $table->string('serial_number_product', 10)->nullable();
+            $table->foreign('serial_number_product')
+                  ->references('serial_number')
+                  ->on('products')
+                  ->onUpdate('cascade')
+                  ->onDelete('cascade');
 
-        $table->integer('purchase_price')->default(0);
-        $table->smallInteger('selling_margin')->default(0);
-        $table->integer('purchase_amount')->default(0);
-        $table->integer('subtotal')->default(0);
-
-        $table->foreign('note_number_purchase')
-              ->references('note_number')
-              ->on('purchases')
-              ->onUpdate('cascade')
-              ->onDelete('cascade');
-
-        $table->foreign('serial_number_product')
-              ->references('serial_number')
-              ->on('products')
-              ->onUpdate('cascade')
-              ->onDelete('cascade');
-
-        $table->timestamps();
-    });
+            $table->timestamps();
+        });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('purchase_details');

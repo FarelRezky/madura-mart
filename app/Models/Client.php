@@ -5,15 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class SaleDetail extends Model
+class Client extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'sale_id',
-        'product_serial', 
-        'selling_price', // <--- UBAH BAGIAN INI, SEBELUMNYA 'price'
-        'qty',
-        'subtotal'
+        'name',
+        'email',
+        'phone',
+        'address',
     ];
 }

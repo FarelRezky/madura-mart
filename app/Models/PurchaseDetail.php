@@ -9,11 +9,13 @@ class PurchaseDetail extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
+protected $fillable = [
         'note_number_purchase',
         'serial_number_product',
+        'expired_date',
         'purchase_price',
         'selling_margin',
+        'selling_price',
         'purchase_amount',
         'subtotal',
     ];

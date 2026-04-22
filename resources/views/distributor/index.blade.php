@@ -11,91 +11,146 @@
     {{-- Custom CSS for Premium Look --}}
     <style>
         :root {
-            --soft-shadow: 0 20px 27px 0 rgba(0, 0, 0, 0.05);
-            --hover-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            --primary-gradient: linear-gradient(310deg, #2152ff 0%, #21d4fd 100%);
+            --soft-shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.04);
+            --hover-shadow: 0 14px 24px -3px rgba(0, 0, 0, 0.08);
+            --primary-gradient: linear-gradient(135deg, #0061ff 0%, #60efff 100%);
+            --text-main: #334155;
+            --text-muted: #64748b;
         }
 
-        .bg-gray-100 { background-color: #f8f9fa !important; }
+        body {
+            background-color: #f8fafc;
+        }
         
         /* Modern Card */
         .card-modern {
             border: none;
-            border-radius: 24px;
+            border-radius: 20px;
             box-shadow: var(--soft-shadow);
             background: #fff;
-            transition: transform 0.2s;
             overflow: hidden;
         }
 
         /* Table Styling */
         .table-modern thead th {
-            font-size: 0.75rem;
-            letter-spacing: 0.5px;
+            font-size: 0.7rem;
+            letter-spacing: 1px;
             text-transform: uppercase;
-            color: #8392ab;
-            border-bottom: 1px solid #edf2f7;
-            padding: 1.5rem 1rem;
-            background-color: #f8f9fa;
+            color: #94a3b8;
+            border-bottom: 2px solid #f1f5f9;
+            padding: 1.2rem 1rem;
+            background-color: #fff;
             font-weight: 700;
         }
 
         .table-modern tbody tr {
-            transition: all 0.2s ease-in-out;
-            border-bottom: 1px solid #f1f1f1;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid #f8fafc;
         }
 
         .table-modern tbody tr:hover {
-            background-color: #fafbfc;
-            transform: scale(1.002);
+            background-color: #f8fafc;
+            transform: translateY(-2px);
             box-shadow: var(--hover-shadow);
-            z-index: 10;
-            position: relative;
+            border-radius: 12px;
         }
 
         .table-modern td {
             padding: 1.2rem 1rem;
             vertical-align: middle;
-            color: #495057;
+            color: var(--text-main);
             font-size: 0.9rem;
         }
 
         /* Avatar / Icon Styling */
         .avatar-initial {
-            width: 45px;
-            height: 45px;
-            border-radius: 12px;
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
             background: var(--primary-gradient);
             color: white;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: bold;
-            font-size: 1.1rem;
-            box-shadow: 0 4px 6px rgba(33, 82, 255, 0.25);
+            font-weight: 800;
+            font-size: 1.2rem;
+            box-shadow: 0 8px 16px rgba(0, 97, 255, 0.2);
+        }
+
+        /* Call to Action Button */
+        .btn-primary-custom {
+            background: var(--primary-gradient);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 97, 255, 0.3);
+        }
+
+        .btn-primary-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 97, 255, 0.4);
+            color: #fff;
         }
 
         /* Action Buttons */
         .btn-action {
-            width: 35px;
-            height: 35px;
+            width: 38px;
+            height: 38px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             border-radius: 10px;
             transition: all 0.2s;
             border: none;
-            background: transparent;
-            color: #8392ab;
+            cursor: pointer;
         }
 
-        .btn-action:hover {
-            background-color: #f0f2f5;
-            transform: translateY(-2px);
+        /* Soft Edit Button */
+        .btn-action.edit { 
+            color: #0ea5e9; 
+            background-color: #e0f2fe; 
+        }
+        .btn-action.edit:hover { 
+            background-color: #bae6fd; 
+            transform: translateY(-2px); 
         }
 
-        .btn-action.edit:hover { color: #fb6340; background-color: rgba(251, 99, 64, 0.1); }
-        .btn-action.delete:hover { color: #f5365c; background-color: rgba(245, 54, 92, 0.1); }
+        /* Soft Delete Button */
+        .btn-action.delete { 
+            color: #ef4444; 
+            background-color: #fee2e2; 
+        }
+        .btn-action.delete:hover { 
+            background-color: #fecaca; 
+            transform: translateY(-2px); 
+        }
+
+        /* Soft Badge */
+        .badge-soft {
+            background-color: #f1f5f9;
+            color: #475569;
+            border: 1px solid #e2e8f0;
+            padding: 0.5em 0.8em;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        /* Address Styling */
+        .address-text {
+            color: var(--text-muted);
+            line-height: 1.6;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .address-icon {
+            color: #cbd5e1;
+            margin-top: 3px;
+        }
 
         /* Floating Alert */
         .floating-alert {
@@ -120,7 +175,7 @@
         
         {{-- Floating Alerts --}}
         @if (session('success'))
-            <div class="alert alert-success floating-alert text-white d-flex align-items-center" role="alert" style="background: linear-gradient(310deg, #2dce89 0%, #2dcecc 100%);">
+            <div class="alert alert-success floating-alert text-white d-flex align-items-center" role="alert" style="background: #10b981;">
                 <span class="alert-icon me-3"><i class="fas fa-check-circle fa-lg"></i></span>
                 <span class="alert-text"><strong>Success!</strong> {{ session('success') }}</span>
                 <button type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -128,7 +183,7 @@
         @endif
 
         @if (session('error'))
-            <div class="alert alert-danger floating-alert text-white d-flex align-items-center" role="alert" style="background: linear-gradient(310deg, #f5365c 0%, #f56036 100%);">
+            <div class="alert alert-danger floating-alert text-white d-flex align-items-center" role="alert" style="background: #ef4444;">
                 <span class="alert-icon me-3"><i class="fas fa-exclamation-circle fa-lg"></i></span>
                 <span class="alert-text"><strong>Error!</strong> {{ session('error') }}</span>
                 <button type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -142,13 +197,13 @@
                     <div class="card-header pb-0 bg-white border-0 pt-4 px-4">
                         <div class="d-lg-flex justify-content-between align-items-center">
                             <div>
-                                <h5 class="mb-0 font-weight-bolder text-dark">{{ $title }} Management</h5>
-                                <p class="text-sm text-muted mb-0">
+                                <h5 class="mb-1 font-weight-bolder" style="color: var(--text-main);">{{ $title }} Management</h5>
+                                <p class="text-sm mb-0" style="color: var(--text-muted);">
                                     View and manage your verified distributors.
                                 </p>
                             </div>
                             <div class="mt-3 mt-lg-0 text-end">
-                                <a href="{{ route('distributors.create') }}" class="btn bg-gradient-dark btn-sm mb-0 shadow-lg px-4 py-2" id="btn-add-distributor" style="border-radius: 8px;">
+                                <a href="{{ route('distributors.create') }}" class="btn btn-primary-custom btn-sm mb-0 px-4 py-2" id="btn-add-distributor">
                                     <i class="fas fa-plus me-2"></i>Add New Distributor
                                 </a>
                             </div>
@@ -156,16 +211,16 @@
                     </div>
 
                     {{-- Table Section --}}
-                    <div class="card-body px-0 pt-3 pb-2">
+                    <div class="card-body px-0 pt-4 pb-2">
                         <div class="table-responsive p-0">
                             <table class="table table-modern align-items-center mb-0">
                                 <thead>
                                     <tr>
-                                        <th class="text-center opacity-7" style="width: 5%">No.</th>
-                                        <th class="ps-4 opacity-7" style="width: 25%">Distributor Name</th>
-                                        <th class="ps-2 opacity-7" style="width: 35%">Address</th>
-                                        <th class="text-center opacity-7" style="width: 20%">Contact</th>
-                                        <th class="text-center opacity-7" style="width: 15%">Actions</th>
+                                        <th class="text-center" style="width: 5%">No.</th>
+                                        <th class="ps-4" style="width: 25%">Distributor Name</th>
+                                        <th class="ps-3" style="width: 35%">Address</th>
+                                        <th class="text-center" style="width: 20%">Contact</th>
+                                        <th class="text-center" style="width: 15%">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -173,33 +228,36 @@
                                         <tr>
                                             {{-- 1. Number --}}
                                             <td class="text-center">
-                                                <span class="text-secondary text-xs font-weight-bold">{{ $no + 1 }}</span>
+                                                <span class="text-sm font-weight-bold" style="color: var(--text-muted);">{{ $no + 1 }}</span>
                                             </td>
 
                                             {{-- 2. Name & Avatar --}}
                                             <td>
                                                 <div class="d-flex px-3 py-1 align-items-center">
                                                     <div class="avatar-initial me-3">
-                                                        {{ substr($item->name, 0, 1) }}
+                                                        {{ strtoupper(substr($item->name, 0, 1)) }}
                                                     </div>
                                                     <div class="d-flex flex-column justify-content-center">
-                                                        <h6 class="mb-0 text-sm font-weight-bold text-dark">{{ $item->name }}</h6>
-                                                        <p class="text-xs text-secondary mb-0">ID: #DST-{{ str_pad($item->id, 4, '0', STR_PAD_LEFT) }}</p>
+                                                        <h6 class="mb-1 text-sm font-weight-bold" style="color: var(--text-main);">{{ $item->name }}</h6>
+                                                        <span class="badge" style="background: #f1f5f9; color: #64748b; font-size: 0.7rem; width: fit-content; padding: 0.3em 0.6em;">
+                                                            #DST-{{ str_pad($item->id, 4, '0', STR_PAD_LEFT) }}
+                                                        </span>
                                                     </div>
                                                 </div>
                                             </td>
 
                                             {{-- 3. Address --}}
                                             <td>
-                                                <p class="text-xs font-weight-bold mb-0 text-secondary text-wrap" style="max-width: 350px; line-height: 1.5;">
-                                                    <i class="fas fa-map-marker-alt me-1 text-xs"></i> {{ $item->address }}
-                                                </p>
+                                                <div class="address-text text-sm font-weight-normal text-wrap" style="max-width: 350px;">
+                                                    <i class="fas fa-map-marker-alt address-icon"></i> 
+                                                    <span>{{ $item->address }}</span>
+                                                </div>
                                             </td>
 
                                             {{-- 4. Phone Number --}}
                                             <td class="align-middle text-center">
-                                                <span class="badge bg-gradient-secondary badge-sm" style="font-weight: 500; letter-spacing: 0.5px;">
-                                                    <i class="fas fa-phone me-1"></i> {{ $item->phone_number }}
+                                                <span class="badge-soft text-xs">
+                                                    <i class="fas fa-phone-alt me-2" style="color: #94a3b8;"></i>{{ $item->phone_number }}
                                                 </span>
                                             </td>
 
@@ -210,7 +268,7 @@
                                                        class="btn-action edit confirm-edit" 
                                                        data-bs-toggle="tooltip" 
                                                        data-bs-title="Edit Distributor">
-                                                        <i class="fas fa-edit text-sm"></i>
+                                                        <i class="fas fa-pen text-sm"></i>
                                                     </a>
 
                                                     <form action="{{ route('distributors.destroy', $item->id) }}" method="POST" class="d-inline delete-form">
@@ -220,7 +278,7 @@
                                                                 class="btn-action delete btn-delete" 
                                                                 data-bs-toggle="tooltip" 
                                                                 data-bs-title="Delete Distributor">
-                                                            <i class="fas fa-trash-alt text-sm"></i>
+                                                            <i class="fas fa-trash text-sm"></i>
                                                         </button>
                                                     </form>
                                                 </div>
@@ -235,11 +293,14 @@
                         @if(count($distributors) == 0)
                             <div class="text-center py-5">
                                 <div class="mb-3">
-                                    <i class="ni ni-delivery-fast text-secondary opacity-3" style="font-size: 3rem;"></i>
+                                    <div style="width: 80px; height: 80px; background: #f1f5f9; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto;">
+                                        <i class="fas fa-box-open text-muted" style="font-size: 2rem;"></i>
+                                    </div>
                                 </div>
-                                <h6 class="text-secondary font-weight-normal">No distributors found</h6>
-                                <a href="{{ route('distributors.create') }}" class="btn btn-link text-primary text-gradient" id="btn-add-distributor-empty">
-                                    Register your first distributor
+                                <h6 class="text-secondary font-weight-normal mb-1">No distributors found</h6>
+                                <p class="text-sm text-muted mb-3">Your distributor list is currently empty.</p>
+                                <a href="{{ route('distributors.create') }}" class="btn btn-primary-custom btn-sm" id="btn-add-distributor-empty">
+                                    Register First Distributor
                                 </a>
                             </div>
                         @endif
@@ -255,8 +316,8 @@
                     <div class="col-lg-6 mb-lg-0 mb-4">
                         <div class="copyright text-center text-sm text-muted text-lg-start">
                             © <script>document.write(new Date().getFullYear())</script>,
-                            Inventory System made with <i class="fa fa-heart text-danger"></i> by
-                            <a href="#" class="font-weight-bold" target="_blank">Creative Tim</a>
+                            Inventory System made with <i class="fa fa-heart text-danger mx-1"></i> by
+                            <a href="#" class="font-weight-bold text-primary" target="_blank">Creative Tim</a>
                         </div>
                     </div>
                 </div>
@@ -287,7 +348,7 @@
             // SweetAlert Configuration
             const swalCustom = Swal.mixin({
                 customClass: {
-                    confirmButton: 'btn bg-gradient-dark mx-2',
+                    confirmButton: 'btn btn-primary-custom mx-2',
                     cancelButton: 'btn btn-light mx-2'
                 },
                 buttonsStyling: false
@@ -297,14 +358,19 @@
             document.querySelectorAll('.btn-delete').forEach(button => {
                 button.addEventListener('click', function(e) {
                     const form = this.closest('form');
-                    swalCustom.fire({
+                    Swal.fire({
                         title: 'Are you sure?',
                         text: "This distributor record will be permanently deleted!",
                         icon: 'warning',
                         showCancelButton: true,
                         confirmButtonText: 'Yes, delete it!',
                         cancelButtonText: 'Cancel',
-                        reverseButtons: true
+                        reverseButtons: true,
+                        customClass: {
+                            confirmButton: 'btn btn-danger mx-2', // Override to red for delete
+                            cancelButton: 'btn btn-light mx-2'
+                        },
+                        buttonsStyling: false
                     }).then((result) => {
                         if (result.isConfirmed) {
                             form.submit();

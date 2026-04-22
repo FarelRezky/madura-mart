@@ -7,6 +7,12 @@ use App\Http\Controllers\TestController;
 use App\Http\Controllers\DistributorController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PurchaseController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\ClientController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\DeliveryController;
+use App\Http\Controllers\SaleController;
+use App\Http\Controllers\CourierController;
 use App\Models\Purchase;
 
 Route::get('/', function () {
@@ -16,6 +22,8 @@ Route::get('/', function () {
 Route::get('/mizuki', function () {
     return view('mizuki', ['title' => 'Mizuki']);
 })->name('mizuki');
+
+Route::get('/admin/users', [UserController::class, 'index'])->name('admin.users')->middleware('auth');
 
 Route::get('/register-courier-logout', [AuthController::class, 'logoutAndRedirectCourier'])->name('register.courier.logout');
 
@@ -37,5 +45,21 @@ Route::middleware('auth')->group(function () {
     Route::resource('distributors', DistributorController::class);
     Route::resource('products', ProductController::class);
     Route::resource('purchases', PurchaseController::class);
+    Route::resource('clients', ClientController::class);
+    Route::resource('orders', OrderController::class);
+    Route::resource('delivery', DeliveryController::class);
+    Route::resource('sales', SaleController::class);
+    Route::resource('couriers', CourierController::class);
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
+
+Route::resource('admin/users', UserController::class, [
+        'names' => [
+            'index' => 'admin.users',
+            'create' => 'admin.users.create',
+            'store' => 'admin.users.store',
+            'edit' => 'admin.users.edit',
+            'update' => 'admin.users.update',
+            'destroy' => 'admin.users.destroy',
+        ]
+    ]);

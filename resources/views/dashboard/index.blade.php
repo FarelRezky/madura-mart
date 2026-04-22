@@ -698,8 +698,8 @@
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="d-flex flex-column h-100">
-                                    <p class="mb-1 pt-2 text-bold">Built by Hotaru</p>
-                                    <h5 class="font-weight-bolder">Hotaru UI {{ $title }}</h5>
+                                    <p class="mb-1 pt-2 text-bold">Built by Jujutsu Kaisen</p>
+                                    <h5 class="font-weight-bolder">Gojo Satoru UI {{ $title }}</h5>
                                     <p class="mb-5">From colors, cards, typography to complex elements, you will find the
                                         full documentation! (of me)</p>
                                     <a class="text-body text-sm font-weight-bold mb-0 icon-move-right mt-auto"
@@ -712,7 +712,7 @@
                             <div class="col-lg-5 ms-auto text-center mt-5 mt-lg-0">
                                 <div class="bg-gradient-primary border-radius-lg h-100">
                                     <div class="position-relative d-flex align-items-center justify-content-center h-100">
-                                        <img class="w-100 border-radius-lg" src="images/Firefly _ HSR.jpg"
+                                        <img class="w-100 border-radius-lg" src="images/Gojo_Satoru.jpg"
                                             alt="rocket">
                                     </div>
                                 </div>
@@ -727,7 +727,7 @@
                         style="background-image: url('images/1.jpg');">
                         <span class="mask bg-gradient-dark"></span>
                         <div class="card-body position-relative z-index-1 d-flex flex-column h-100 p-3">
-                            <h5 class="text-white font-weight-bolder mb-4 pt-2">Work with me, Hotaru!</h5>
+                            <h5 class="text-white font-weight-bolder mb-4 pt-2">Work with me, Gojo Satoru!</h5>
                             <p class="text-white">Wealth creation is an evolutionarily recent positive-sum game. It is all
                                 about who take the opportunity first!!</p>
                             <a class="text-white text-sm font-weight-bold mb-0 icon-move-right mt-auto"

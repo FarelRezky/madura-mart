@@ -6,22 +6,18 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
+        // Pastikan nama tabelnya 'sales'
         Schema::create('sales', function (Blueprint $table) {
             $table->id();
+            $table->string('sale_number', 15)->unique(); // Contoh: SL-20240101-001
             $table->date('sale_date');
-            $table->integer('total_price')->nullAble();
+            $table->bigInteger('total_price')->default(0);
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('sales');

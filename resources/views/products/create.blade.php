@@ -183,10 +183,10 @@
                                 <div class="image-wrapper" id="preview-container">
                                     {{-- Default Placeholder --}}
                                     <div id="default-view">
-                                        <img src="{{ asset('images/makise.png') }}" 
+                                        <img src="{{ asset('images/Ryomen_Sukuna.png') }}" 
                                              alt="Default Illustration" 
                                              class="preview-img-style">
-                                        <p class="text-muted mt-3 fst-italic text-sm">"Makise Kurisu edition"</p>
+                                        <p class="text-muted mt-3 fst-italic text-sm">"Ryomen Sukuna edition"</p>
                                     </div>
 
                                     {{-- Dynamic Preview --}}

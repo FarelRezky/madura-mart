@@ -12,14 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('deliveries', function (Blueprint $table) {
-            $table->id();
-            $table->date('delivery_date');
-            $table->foreignId('expedition_id')->constrained('expeditions')->onUpdate('cascade')->onDelete('cascade')->nullAble();
-            $table->foreignId('order_id')->constrained('orders')->onUpdate('cascade')->onDelete('cascade')->nullAble();
-            $table->string('picture_proof');
-            $table->integer('invoice');
-            $table->timestamps();
-        });
+    $table->id();
+    $table->string('resi_kode')->unique(); // Pastikan namanya resi_kode
+    $table->string('kurir');
+    $table->string('status');
+    $table->timestamps();
+});
     }
 
     /**

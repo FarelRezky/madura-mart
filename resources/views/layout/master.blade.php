@@ -72,7 +72,7 @@
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
       <a class="navbar-brand m-0" href=" https://demos.creative-tim.com/soft-ui-dashboard/pages/dashboard.html " target="_blank">
-        <img id="logo-image" src="images/icon-kyurarin1.webp" class="navbar-brand-img h-100" alt="main_logo">
+        <img src="{{ asset('images/icon.gif') }}" class="navbar-brand-img h-100" alt="main_logo" style="pointer-events: none; border-radius: 5px;">
         <span class="ms-1 font-weight-bold">Madura Mart</span>
       </a>
     </div>
@@ -358,25 +358,6 @@
   <script async defer src="https://buttons.github.io/buttons.js"></script>
   <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
   <script src="{{ asset('layout/assets/js/soft-ui-dashboard.min.js?v=1.0.7') }}"></script>
-  <script>
-    (function() {
-      const images = [
-        "{{ asset('images/icon-kyurarin1.webp') }}",
-        "{{ asset('images/icon-kyurarin2.webp') }}",
-        "{{ asset('images/icon-kyurarin3.webp') }}",
-        "{{ asset('images/icon-kyurarin4.webp') }}"
-      ];
-
-      let currentIndex = 0;
-      const logoImage = document.getElementById('logo-image');
-
-      // Cycle through images every second
-      setInterval(function() {
-        currentIndex = (currentIndex + 1) % images.length;
-        logoImage.src = images[currentIndex];
-      }, 1000);
-    })();
-</script>
 </body>
 
 </html>

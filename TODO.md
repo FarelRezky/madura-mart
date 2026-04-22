@@ -1,23 +1,24 @@
-# TODO: Implement Image Display in Products Table
+# Purchase Error Fix - TODO
 
-## Tasks
-- [x] Create new folder for photos: public/images/photos
-- [x] Update ProductController to store images in public/images/photos folder
-- [x] Update products/index.blade.php to display images from the new photos folder
-- [x] Update delete logic in ProductController to handle new storage path
-- [x] Update products/edit.blade.php to display images from the new photos folder
-- [ ] Test image upload and display functionality
-- [ ] Update other related views (create, edit) if necessary for consistency
+## Status: In Progress
 
-# TODO: Build Create Purchase Page
+### 1. [✅] Fix PurchaseDetail model
+- Add missing fillable fields: expired_date, selling_price
+- File: app/Models/PurchaseDetail.php
 
-## Tasks
-- [x] Update PurchaseDetail model with fillable fields and relationships
-- [x] Update PurchaseController store method to handle purchase details
-- [x] Update create.blade.php with dynamic product rows and calculations
-- [x] Add JavaScript for adding/removing product rows and calculating totals
+### 2. [✅] Update PurchaseController index method
+- Eager load details.product for index view
+- File: app/Http/Controllers/PurchaseController.php
 
-## Notes
-- Changed storage from storage/app/public/products to public/images/photos for direct access
-- Updated view to use asset('images/' . $item->picture) for image display
-- Ensured delete logic removes files from the correct path
+### 3. [✅] Rewrite purchases/index.blade.php
+- Fix data structure: group purchases with nested details
+- Use correct model fields and relationships
+- Fix action links to purchases routes
+- File: resources/views/purchases/index.blade.php
+
+### 4. [ ] Test changes
+- Visit /purchases index
+- Create/edit purchase
+- Check laravel.log for errors
+
+### 5. [ ] Complete ✅

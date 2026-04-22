@@ -11,36 +11,38 @@ use App\Models\Distributor;
 
 class PurchaseController extends Controller
 {
-    // ... (index, create, store methods remain the same) ...
-
-    public function index()
+public function index()
     {
         return view('purchases.index', [
             'title' => 'Purchases',
-            'datas' => Purchase::with(['distributor', 'details'])->latest()->get()
+            'purchases' => Purchase::with(['distributor', 'details.product'])->latest()->get()
         ]);
     }
 
     public function create()
     {
-        return view('purchases.create', [
-            'title' => 'Create Purchase',
-            'products' => Product::all(),
-            'distributors' => Distributor::all()
-        ]);
+        $title = 'Create Purchase';
+        
+        $distributors = \App\Models\Distributor::all(); 
+        $products = \App\Models\Product::all(); 
+
+        return view('purchases.create', compact('title', 'distributors', 'products'));
     }
 
     public function store(Request $request)
     {
+        // 1. Tambahkan validasi untuk expired_date dan selling_price
         $validated = $request->validate([
             'note_number' => 'required|string|max:15|unique:purchases,note_number',
             'purchase_date' => 'required|date',
             'distributor_id' => 'required|exists:distributors,id',
-            'total_price' => 'required|integer|min:0',
+            'total_price' => 'required|numeric|min:0',
             'products' => 'required|array|min:1',
             'products.*.serial_number' => 'required|exists:products,serial_number',
-            'products.*.purchase_price' => 'required|integer|min:0',
-            'products.*.selling_margin' => 'required|integer|min:0',
+            'products.*.expired_date' => 'required|date', // <-- BARU
+            'products.*.purchase_price' => 'required|numeric|min:0',
+            'products.*.selling_margin' => 'required|numeric|min:0',
+            'products.*.selling_price' => 'required|numeric|min:0', // <-- BARU
             'products.*.purchase_amount' => 'required|integer|min:1',
         ]);
 
@@ -54,11 +56,15 @@ class PurchaseController extends Controller
 
             foreach ($validated['products'] as $productData) {
                 $subtotal = $productData['purchase_price'] * $productData['purchase_amount'];
+                
+                // 2. Simpan juga data expired_date dan selling_price ke tabel detail
                 PurchaseDetail::create([
                     'note_number_purchase' => $purchase->note_number,
                     'serial_number_product' => $productData['serial_number'],
+                    'expired_date' => $productData['expired_date'], // <-- BARU
                     'purchase_price' => $productData['purchase_price'],
                     'selling_margin' => $productData['selling_margin'],
+                    'selling_price' => $productData['selling_price'], // <-- BARU
                     'purchase_amount' => $productData['purchase_amount'],
                     'subtotal' => $subtotal,
                 ]);
@@ -70,7 +76,6 @@ class PurchaseController extends Controller
 
     public function edit(string $id)
     {
-        // We load details so we can display existing items in the edit form
         $purchase = Purchase::with('details')->findOrFail($id);
         return view('purchases.edit', [
             'purchase' => $purchase,
@@ -85,20 +90,20 @@ class PurchaseController extends Controller
         $purchase = Purchase::findOrFail($id);
 
         $validated = $request->validate([
-            // Note number validation ignores current ID
             'note_number' => 'required|string|max:15|unique:purchases,note_number,' . $id,
             'purchase_date' => 'required|date',
             'distributor_id' => 'required|exists:distributors,id',
-            'total_price' => 'required|integer|min:0',
+            'total_price' => 'required|numeric|min:0',
             'products' => 'required|array|min:1',
             'products.*.serial_number' => 'required|exists:products,serial_number',
-            'products.*.purchase_price' => 'required|integer|min:0',
-            'products.*.selling_margin' => 'required|integer|min:0',
+            'products.*.expired_date' => 'required|date', // <-- BARU
+            'products.*.purchase_price' => 'required|numeric|min:0',
+            'products.*.selling_margin' => 'required|numeric|min:0',
+            'products.*.selling_price' => 'required|numeric|min:0', // <-- BARU
             'products.*.purchase_amount' => 'required|integer|min:1',
         ]);
 
         DB::transaction(function () use ($purchase, $validated) {
-            // 1. Update Header
             $purchase->update([
                 'note_number' => $validated['note_number'],
                 'purchase_date' => $validated['purchase_date'],
@@ -106,19 +111,18 @@ class PurchaseController extends Controller
                 'total_price' => $validated['total_price'],
             ]);
 
-            // 2. Delete ALL existing items for this purchase
             \App\Models\PurchaseDetail::where('note_number_purchase', $purchase->note_number)->delete();
 
-            // 3. Create NEW items from the form data
-            // (If you deleted a row in the HTML, it is not in $validated['products'], so it won't be recreated here)
             foreach ($validated['products'] as $productData) {
                 $subtotal = $productData['purchase_price'] * $productData['purchase_amount'];
                 
                 \App\Models\PurchaseDetail::create([
                     'note_number_purchase' => $purchase->note_number,
                     'serial_number_product' => $productData['serial_number'],
+                    'expired_date' => $productData['expired_date'], // <-- BARU
                     'purchase_price' => $productData['purchase_price'],
                     'selling_margin' => $productData['selling_margin'],
+                    'selling_price' => $productData['selling_price'], // <-- BARU
                     'purchase_amount' => $productData['purchase_amount'],
                     'subtotal' => $subtotal,
                 ]);
@@ -131,7 +135,6 @@ class PurchaseController extends Controller
     public function destroy(string $id)
     {
         $purchase = Purchase::findOrFail($id);
-        // Cascade delete details first (safeguard)
         PurchaseDetail::where('note_number_purchase', $purchase->note_number)->delete();
         $purchase->delete();
 

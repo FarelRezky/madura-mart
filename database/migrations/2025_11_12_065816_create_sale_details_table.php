@@ -6,31 +6,31 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('sale_details', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('sale_id')->constrained('sales')->onUpdate('cascade')->onDelete('cascade')->nullAble();
-            $table->string('serial_number_product', 10)->nullAble();
-            $table->integer('selling_price')->default(0);
-            $table->integer('sales_quantity')->default(0);
-            $table->integer('subtotal')->default(0);
-
-            $table->foreign('serial_number_product')
-                ->references('serial_number')
-                ->on('products')
-                ->onUpdate('cascade')
-                ->onDelete('cascade');
+            // Menghubungkan ke tabel sales id
+            $table->foreignId('sale_id')
+                  ->constrained('sales')
+                  ->onUpdate('cascade')
+                  ->onDelete('cascade');
+            
+            // Kolom detail barang
+            $table->string('product_serial', 10);
+            $table->bigInteger('selling_price');
+            $table->integer('qty');
+            $table->bigInteger('subtotal');
             $table->timestamps();
+
+            // Opsional: Hubungkan ke tabel products jika ada
+            $table->foreign('product_serial')
+                  ->references('serial_number')
+                  ->on('products')
+                  ->onUpdate('cascade');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('sale_details');
