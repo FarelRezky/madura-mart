@@ -44,6 +44,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('test', TestController::class);
     Route::resource('distributors', DistributorController::class);
     Route::resource('products', ProductController::class);
+    Route::post('/purchases/verify-password', [PurchaseController::class, 'verifyPassword'])->name('purchases.verify-password');
     Route::resource('purchases', PurchaseController::class);
     Route::resource('clients', ClientController::class);
     Route::resource('orders', OrderController::class);

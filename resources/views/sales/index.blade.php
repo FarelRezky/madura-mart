@@ -5,6 +5,7 @@
 @endsection
 
 @section('content')
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 <style>
     :root {
         --soft-shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.04);
@@ -68,11 +69,15 @@
         cursor: pointer;
     }
 
-    .btn-action.edit { color: #0ea5e9; background-color: #e0f2fe; }
+    .btn-action.edit { background-color: #e0f2fe; }
     .btn-action.edit:hover { background-color: #bae6fd; transform: translateY(-2px); }
+    .btn-action.edit i { color: #0ea5e9 !important; font-size: 0.95rem !important; }
+    .btn-action.edit:hover i { color: #0284c7 !important; }
 
-    .btn-action.delete { color: #ef4444; background-color: #fee2e2; }
+    .btn-action.delete { background-color: #fee2e2; }
     .btn-action.delete:hover { background-color: #fecaca; transform: translateY(-2px); }
+    .btn-action.delete i { color: #ef4444 !important; font-size: 0.95rem !important; }
+    .btn-action.delete:hover i { color: #dc2626 !important; }
 
     /* Product Badge */
     .product-badge {
@@ -109,11 +114,11 @@
             <div class="card card-modern">
                 <div class="card-header bg-white border-0 pt-4 pb-0 px-4 d-flex justify-content-between align-items-center">
                     <div>
-                        <h5 class="mb-1 font-weight-bolder text-dark">Data Penjualan</h5>
-                        <p class="text-sm text-muted mb-0">Manajemen Transaksi & Riwayat Pendapatan</p>
+                        <h5 class="mb-1 font-weight-bolder text-dark">Sales Data</h5>
+                        <p class="text-sm text-muted mb-0">Transaction Management & Income History</p>
                     </div>
                     <a href="{{ route('sales.create') }}" class="btn text-white btn-sm mb-0 shadow-lg px-4 py-2" style="background: var(--primary-gradient); border-radius: 8px;">
-                        <i class="fas fa-plus me-2"></i>Tambah Transaksi
+                        <i class="fas fa-plus me-2"></i>Add Sale
                     </a>
                 </div>
 
@@ -123,10 +128,10 @@
                             <thead>
                                 <tr>
                                     <th class="text-center" style="width: 5%">No</th>
-                                    <th style="width: 20%">Info Transaksi</th>
-                                    <th style="width: 35%">Produk Terjual</th>
-                                    <th style="width: 20%">Total Pendapatan</th>
-                                    <th class="text-center" style="width: 20%">Aksi</th>
+                                    <th style="width: 20%">Transaction Info</th>
+                                    <th style="width: 35%">Products Sold</th>
+                                    <th style="width: 20%">Total Income</th>
+                                    <th class="text-center" style="width: 20%">Action</th>
                                 </tr>
                             </thead>
                             <tbody>

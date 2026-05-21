@@ -142,14 +142,19 @@
                                                     </td>
                                                     
                                                     <td class="text-center">
-                                                        <a href="{{ route('purchases.edit', $purchase->id) }}" class="btn btn-link text-warning p-0 me-3 mb-0" title="Edit">
+                                                        <button type="button" class="btn btn-link text-warning p-0 me-3 mb-0" title="Edit" 
+                                                                onclick="requirePasswordForEdit('{{ route('purchases.edit', $purchase->id) }}')">
                                                             <i class="fas fa-edit fs-5"></i>
-                                                        </a>
-                                                        <form action="{{ route('purchases.destroy', $purchase->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus Invoice {{ $purchase->note_number }}?')">
+                                                        </button>
+
+                                                        <button type="button" class="btn btn-link text-danger p-0 mb-0" title="Delete" 
+                                                                onclick="requirePasswordForDelete('{{ $purchase->id }}')">
+                                                            <i class="fas fa-trash fs-5"></i>
+                                                        </button>
+
+                                                        <form id="delete-form-{{ $purchase->id }}" action="{{ route('purchases.destroy', $purchase->id) }}" method="POST" class="d-none">
                                                             @csrf @method('DELETE')
-                                                            <button type="submit" class="btn btn-link text-danger p-0 mb-0" title="Delete">
-                                                                <i class="fas fa-trash fs-5"></i>
-                                                            </button>
+                                                            <input type="hidden" name="password" id="delete-password-{{ $purchase->id }}">
                                                         </form>
                                                     </td>
                                                 </tr>
@@ -212,5 +217,136 @@
             // Masukkan ke dalam HTML
             document.body.appendChild(modal.firstElementChild);
         }
+
+        // Fungsi mengecek password ke backend via AJAX
+        function verifyBossPassword(password) {
+            return fetch('{{ route('purchases.verify-password') }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json', // <-- Tambahan penting agar Laravel merespon JSON
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({ password: password })
+            })
+            .then(async response => {
+                if (!response.ok) {
+                    console.error("Server merespon dengan status:", response.status);
+                    return { success: false, message: 'Terjadi error di server (Status: ' + response.status + ')' };
+                }
+                return response.json(); // Parsing JSON dari controller
+            })
+            .catch(error => {
+                console.error("Detail Error Fetch:", error);
+                return { success: false, message: 'Gagal terhubung ke server! Cek console.' };
+            });
+        }
+
+        // Alur Modal untuk Edit
+        function requirePasswordForEdit(editUrl) {
+            Swal.fire({
+                title: 'Security Check',
+                html: '<span style="font-size: 0.9em; color: #6c757d;">Please enter the <b>Administrator</b> password to edit this record.</span>',
+                input: 'password',
+                inputPlaceholder: 'Enter password',
+                icon: 'warning',
+                confirmButtonColor: '#e91e63',
+                cancelButtonColor: '#adb5bd',
+                showCancelButton: true,
+                confirmButtonText: '<i class="fas fa-check-circle me-1"></i> Verify',
+                cancelButtonText: 'Cancel',
+                showLoaderOnConfirm: true,
+                preConfirm: (password) => {
+                    if (!password) { 
+                        Swal.showValidationMessage('Password is required!'); 
+                        return false;
+                    }
+                    return verifyBossPassword(password).then(data => {
+                        if (!data.success) {
+                            Swal.showValidationMessage(data.message || 'Password salah!');
+                            return false;
+                        }
+                        return password;
+                    }).catch(error => {
+                        Swal.showValidationMessage('Server error! Please try again.');
+                        return false;
+                    });
+                },
+                allowOutsideClick: () => !Swal.isLoading()
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Verified!',
+                        text: 'Redirecting to edit form...',
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then(() => {
+                        window.location.href = editUrl; 
+                    });
+                }
+            });
+        }
+
+        // Alur Modal untuk Hapus
+        function requirePasswordForDelete(id) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Are you sure?',
+                html: '<span style="font-size: 0.9em; color: #6c757d;">You are about to delete this record. This action <b>cannot be undone</b>.</span>',
+                showCancelButton: true,
+                confirmButtonColor: '#f5365c', 
+                cancelButtonColor: '#adb5bd',
+                confirmButtonText: '<i class="fas fa-trash-alt me-1"></i> Yes, delete it!',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Security Check',
+                        html: '<span style="font-size: 0.9em; color: #6c757d;">Please enter the <b>Administrator</b> password to authorize deletion.</span>',
+                        input: 'password',
+                        inputPlaceholder: 'Enter password',
+                        icon: 'error',
+                        confirmButtonColor: '#f5365c',
+                        cancelButtonColor: '#adb5bd',
+                        showCancelButton: true,
+                        confirmButtonText: '<i class="fas fa-check-circle me-1"></i> Authorize',
+                        cancelButtonText: 'Cancel',
+                        showLoaderOnConfirm: true,
+                        preConfirm: (password) => {
+                            if (!password) { 
+                                Swal.showValidationMessage('Password is required!'); 
+                                return false;
+                            }
+                            return verifyBossPassword(password).then(data => {
+                                if (!data.success) {
+                                    Swal.showValidationMessage(data.message || 'Password salah!');
+                                    return false;
+                                }
+                                return password;
+                            }).catch(error => {
+                                Swal.showValidationMessage('Server error! Please try again.');
+                                return false;
+                            });
+                        },
+                        allowOutsideClick: () => !Swal.isLoading()
+                    }).then((pwdResult) => {
+                        if (pwdResult.isConfirmed) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Authorized!',
+                                text: 'Deleting record...',
+                                showConfirmButton: false,
+                                timer: 1500
+                            }).then(() => {
+                                document.getElementById('delete-password-' + id).value = pwdResult.value;
+                                document.getElementById('delete-form-' + id).submit();
+                            });
+                        }
+                    });
+                }
+            });
+        }
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 @endsection

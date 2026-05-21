@@ -132,8 +132,29 @@ public function index()
         return redirect()->route('purchases.index')->with('success', 'Purchase updated successfully');
     }
 
-    public function destroy(string $id)
+    // Tambahkan method ini untuk mengecek password dari AJAX
+    public function verifyPassword(Request $request)
     {
+        // TENTUKAN PASSWORD ATASAN DI SINI
+        $bossPassword = 'admin123'; 
+
+        if ($request->password === $bossPassword) {
+            return response()->json(['success' => true]);
+        }
+        
+        return response()->json(['success' => false, 'message' => 'Password salah!']);
+    }
+
+    // Ubah method destroy dengan menambahkan parameter Request
+    public function destroy(Request $request, string $id)
+    {
+        $bossPassword = 'admin123'; // Pastikan sama dengan yang di atas
+        
+        // Proteksi backend: Pastikan password ikut dikirim dan benar saat menghapus
+        if ($request->password !== $bossPassword) {
+            return redirect()->route('purchases.index')->with('error', 'Gagal menghapus! Password atasan salah.');
+        }
+
         $purchase = Purchase::findOrFail($id);
         PurchaseDetail::where('note_number_purchase', $purchase->note_number)->delete();
         $purchase->delete();

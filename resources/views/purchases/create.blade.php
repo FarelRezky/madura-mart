@@ -6,6 +6,16 @@
 
 @section('purchase')
     <style>
+        /* --- SEMBUNYIKAN PANAH PADA INPUT NUMBER --- */
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type="number"] {
+            -moz-appearance: textfield; /* Untuk Firefox */
+        }
+
         .form-label-custom { font-size: 0.70rem; font-weight: 700; text-transform: uppercase; color: #8898aa; margin-bottom: 0.5rem; display: block; }
         .form-control { border: 1px solid #e0e6ed; border-radius: 8px; font-size: 0.85rem; }
         .form-control:focus { border-color: #5e72e4; box-shadow: 0 0 0 3px rgba(94, 114, 228, 0.1); }
@@ -94,7 +104,7 @@
                                             <th style="min-width: 160px;">Expired Date</th>
                                             <th style="min-width: 180px;">Buy Price</th>
                                             <th style="min-width: 180px;">Sell Price</th>
-                                            <th style="min-width: 130px;">Margin</th>
+                                            <th style="min-width: 180px;">Margin</th>
                                             <th style="min-width: 100px;">Qty</th>
                                             <th style="min-width: 150px;">Subtotal</th>
                                             <th style="min-width: 80px;" class="text-center">Action</th>
@@ -142,7 +152,7 @@
             const grandTotalDisplay = document.getElementById('grand-total-display');
             const grandTotalInput = document.getElementById('grand-total-input');
             let itemIndex = 0;
-
+            
             function addRow() {
                 const rowId = itemIndex;
                 const html = `
@@ -170,8 +180,8 @@
                         </td>
                         <td>
                             <div class="input-group">
-                                <input type="number" name="products[${rowId}][selling_margin]" class="form-control margin-input pe-1" min="0" value="10" required>
                                 <span class="input-group-text px-2">%</span>
+                                <input type="number" name="products[${rowId}][selling_margin]" class="form-control margin-input ps-2" min="0" value="10" required>
                             </div>
                         </td>
                         <td>

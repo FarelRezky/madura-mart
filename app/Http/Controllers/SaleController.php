@@ -59,6 +59,59 @@ class SaleController extends Controller
         return redirect()->route('sales.index')->with('success', 'Penjualan Berhasil!');
     }
 
+    public function edit($id) {
+        $title = 'Edit Penjualan';
+        $sale = Sale::with('details.product')->findOrFail($id);
+        $products = Product::all();
+        return view('sales.edit', compact('sale', 'products', 'title'));
+    }
+
+    public function update(Request $request, $id) {
+        $request->validate([
+            'sale_date' => 'required|date',
+            'products' => 'required|array|min:1',
+            'products.*.serial' => 'required',
+            'products.*.qty' => 'required|integer|min:1',
+        ]);
+
+        $sale = Sale::findOrFail($id);
+
+        DB::transaction(function () use ($request, $sale) {
+            // 1. Kembalikan stok lama
+            foreach ($sale->details as $detail) {
+                Product::where('serial_number', $detail->product_serial)->increment('stock', $detail->qty);
+            }
+
+            // 2. Hapus detail lama
+            SaleDetail::where('sale_id', $sale->id)->delete();
+
+            // 3. Tambah detail baru dan kurangi stok baru
+            foreach ($request->products as $item) {
+                $product = Product::where('serial_number', $item['serial'])->first();
+                
+                // Kurangi Stok
+                $product->decrement('stock', $item['qty']);
+
+                // Simpan Sale Detail
+                SaleDetail::create([
+                    'sale_id'        => $sale->id, 
+                    'product_serial' => $item['serial'],
+                    'selling_price'  => $item['price'],
+                    'qty'            => $item['qty'],
+                    'subtotal'       => $item['price'] * $item['qty'], 
+                ]);
+            }
+
+            // 4. Update data penjualan utama
+            $sale->update([
+                'sale_date' => $request->sale_date,
+                'total_price' => $request->total_price,
+            ]);
+        });
+
+        return redirect()->route('sales.index')->with('success', 'Penjualan Berhasil Diperbarui!');
+    }
+
     public function destroy($id) {
         $sale = Sale::findOrFail($id);
         // Tambahkan stok balik sebelum hapus
