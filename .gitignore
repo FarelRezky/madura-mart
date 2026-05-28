@@ -22,5 +22,6 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
-/public/images/*
+/public/images/products/*
+/public/images/photos/*
 !/public/images/.gitkeep
