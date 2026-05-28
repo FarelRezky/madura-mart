@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: maduramart_app
+    restart: unless-stopped
+    volumes:
+      - .:/var/www/html
+    environment:
+      # Variabel di bawah ini akan otomatis menimpa nilai yang ada di .env lokalmu
+      - DB_CONNECTION=mysql
+      - DB_HOST=db               # Wajib 'db' (merujuk ke nama service di bawah)
+      - DB_PORT=3306
+      - DB_DATABASE=madura_mart  # Disesuaikan dengan .env milikmu
+      - DB_USERNAME=root
+      - DB_PASSWORD=rahasia      # Diisi agar MariaDB container bisa berjalan
+      - SESSION_DRIVER=database  # Disesuaikan dengan .env milikmu
+      - CACHE_STORE=database     # Disesuaikan dengan .env milikmu
+      - QUEUE_CONNECTION=database # Disesuaikan dengan .env milikmu
+    depends_on:
+      - db
+
+  web:
+    image: nginx:alpine
+    container_name: maduramart_web
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    volumes:
+      - .:/var/www/html
+      - ./nginx-container.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
+
+  db:
+    image: mariadb:10.11
+    container_name: maduramart_db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: madura_mart  # Disesuaikan dengan .env milikmu
+      MYSQL_ROOT_PASSWORD: rahasia # Password untuk container database
+    volumes:
+      - dbdata:/var/lib/mysql
+
+volumes:
+  dbdata:

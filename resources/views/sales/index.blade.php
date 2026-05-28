@@ -101,7 +101,7 @@
         <script>
             Swal.fire({
                 icon: 'success',
-                title: 'Berhasil!',
+                title: 'Success!',
                 text: '{{ session('success') }}',
                 timer: 3000,
                 showConfirmButton: false
@@ -150,17 +150,17 @@
                                         
                                         <td>
                                             <div class="d-flex flex-wrap gap-1" style="max-width: 300px;">
-                                                {{-- Cek apakah transaksi memiliki relasi ke detail --}}
+                                                {{-- Check if transaction has details relation --}}
                                                 @if(isset($item->details) && $item->details->count() > 0)
                                                     @foreach($item->details as $detail)
                                                         <span class="product-badge">
-                                                            {{-- Ambil nama produk dari relasi, jika gagal tampilkan serial numbernya --}}
+                                                            {{-- Get product name from relationship, fallback to serial number --}}
                                                             {{ $detail->product->name ?? $detail->product->nama_barang ?? $detail->product_serial }} 
                                                             <span class="text-primary fw-bold ms-1">x{{ $detail->qty }}</span>
                                                         </span>
                                                     @endforeach
                                                 @else
-                                                    <span class="text-xs text-muted" style="font-style: italic;">Tidak ada rincian produk</span>
+                                                    <span class="text-xs text-muted" style="font-style: italic;">No product details</span>
                                                 @endif
                                             </div>
                                         </td>
@@ -176,14 +176,14 @@
                                                 <a href="{{ route('sales.edit', $item->id) }}" 
                                                    class="btn-action edit" 
                                                    data-bs-toggle="tooltip" 
-                                                   data-bs-title="Edit Transaksi">
+                                                   data-bs-title="Edit Transaction">
                                                     <i class="fas fa-pen text-sm"></i>
                                                 </a>
 
                                                 <form action="{{ route('sales.destroy', $item->id) }}" method="POST" class="d-inline form-delete">
                                                     @csrf 
                                                     @method('DELETE')
-                                                    <button type="button" class="btn-action delete btn-delete" data-bs-toggle="tooltip" data-bs-title="Hapus Transaksi">
+                                                    <button type="button" class="btn-action delete btn-delete" data-bs-toggle="tooltip" data-bs-title="Delete Transaction">
                                                         <i class="fas fa-trash text-sm"></i>
                                                     </button>
                                                 </form>
@@ -197,9 +197,9 @@
                                                 <div style="width: 80px; height: 80px; background: #f1f5f9; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px;">
                                                     <i class="fas fa-receipt text-muted" style="font-size: 2rem;"></i>
                                                 </div>
-                                                <h6 class="text-dark fw-bold mb-1">Belum Ada Transaksi</h6>
-                                                <p class="text-muted text-sm mb-3">Transaksi penjualan yang Anda buat akan muncul di sini.</p>
-                                                <a href="{{ route('sales.create') }}" class="btn btn-sm btn-outline-primary" style="border-radius: 8px;">Buat Transaksi Pertama</a>
+                                                <h6 class="text-dark fw-bold mb-1">No Transactions Yet</h6>
+                                                <p class="text-muted text-sm mb-3">The sales transactions you create will appear here.</p>
+                                                <a href="{{ route('sales.create') }}" class="btn btn-sm btn-outline-primary" style="border-radius: 8px;">Create First Transaction</a>
                                             </div>
                                         </td>
                                     </tr>
@@ -215,13 +215,13 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Inisialisasi Tooltip Bootstrap (Hover Text)
+        // Initialize Bootstrap Tooltip (Hover Text)
         var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
         var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
             return new bootstrap.Tooltip(tooltipTriggerEl)
         });
 
-        // Logika SweetAlert untuk Hapus Data
+        // SweetAlert Logic for Deleting Data
         const deleteButtons = document.querySelectorAll('.btn-delete');
         deleteButtons.forEach(button => {
             button.addEventListener('click', function(e) {
@@ -229,14 +229,14 @@
                 const form = this.closest('form');
                 
                 Swal.fire({
-                    title: 'Hapus Transaksi?',
-                    text: "Data transaksi akan dihapus permanen dan stok produk akan dikembalikan!",
+                    title: 'Delete Transaction?',
+                    text: "Transaction data will be permanently deleted and product stock will be returned!",
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#ef4444',
                     cancelButtonColor: '#cbd5e1',
-                    confirmButtonText: 'Ya, Hapus!',
-                    cancelButtonText: 'Batal',
+                    confirmButtonText: 'Yes, Delete!',
+                    cancelButtonText: 'Cancel',
                     reverseButtons: true,
                     customClass: {
                         confirmButton: 'shadow-sm',

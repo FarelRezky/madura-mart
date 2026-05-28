@@ -210,7 +210,7 @@
 
                 <div class="col-lg-4 animate__animated animate__fadeInRight">
                     <div class="receipt-container mb-4" id="printable_receipt">
-                        <button type="button" class="print-btn no-print d-flex align-items-center justify-content-center" onclick="window.print()" title="Cetak Struk">
+                        <button type="button" class="print-btn no-print d-flex align-items-center justify-content-center" onclick="window.print()" title="Print Receipt">
                             <i class="fas fa-print"></i>
                         </button>
                         <div class="receipt-header">
@@ -221,10 +221,10 @@
                         <div class="receipt-body" style="min-height: 150px;">
                             <div class="receipt-line text-xxs text-secondary mb-4 pb-2" style="border-bottom: 1px solid #f1f5f9;">
                                 <span>Ref: <span id="r_ref">{{ $sale->sale_number }}</span></span>
-                                <span>Tgl: {{ \Carbon\Carbon::parse($sale->sale_date)->format('d/m/Y') }}</span>
+                                <span>Date: {{ \Carbon\Carbon::parse($sale->sale_date)->format('d/m/Y') }}</span>
                             </div>
                             <div id="receipt_items">
-                                <p class="text-center text-xs text-secondary my-5" style="font-style: italic;">Struk kosong. Silakan pilih produk...</p>
+                                <p class="text-center text-xs text-secondary my-5" style="font-style: italic;">Empty receipt. Please select a product...</p>
                             </div>
                         </div>
                         <div class="receipt-footer mt-4">
@@ -234,7 +234,7 @@
                             </div>
                             <div class="text-center mt-5">
                                 <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=MADURA+MART" id="receipt_qr" alt="QR" class="opacity-8" style="width: 70px; height: 70px; border-radius: 5px;">
-                                <p class="text-xxs text-secondary mt-3 fw-bold">TERIMA KASIH ATAS KUNJUNGAN ANDA</p>
+                                <p class="text-xxs text-secondary mt-3 fw-bold">THANK YOU FOR YOUR VISIT</p>
                             </div>
                         </div>
                     </div>
@@ -268,7 +268,7 @@
                 <tr class="item-row">
                     <td class="p-2 border-0">
                         <select name="products[${itemIndex}][serial]" class="form-select product-select fw-bold text-dark" required onchange="updatePrice(this)">
-                            <option value="" disabled selected>Pilih Produk...</option>
+                            <option value="" disabled selected>Select Product...</option>
                             @foreach($products as $p)
                                 <option value="{{ $p->serial_number }}" data-price="{{ $p->selling_price ?? $p->harga_jual }}" data-name="{{ $p->name ?? $p->nama_barang }}">
                                     {{ $p->name ?? $p->nama_barang }} (Stok: {{ $p->stock ?? $p->stok }})
@@ -362,7 +362,7 @@
                 document.getElementById('detail_product_name').innerText = "Ready to Serve";
                 document.getElementById('detail_calculation').innerText = "Select a product to start the transaction";
                 document.getElementById('stock_indicator').classList.add('d-none');
-                document.getElementById('receipt_items').innerHTML = '<p class="text-center text-xs text-secondary my-5" style="font-style: italic;">Struk kosong. Silakan pilih produk...</p>';
+                document.getElementById('receipt_items').innerHTML = '<p class="text-center text-xs text-secondary my-5" style="font-style: italic;">Empty receipt. Please select a product...</p>';
             }
 
             // Update Total Struk
