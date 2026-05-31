@@ -19,9 +19,7 @@ services:
       - SESSION_DRIVER=database
       - CACHE_STORE=database
       - QUEUE_CONNECTION=database
-      # [KUNCI 3] Memerintahkan Laravel mempercayai header dari Nginx Load Balancer
       - TRUSTED_PROXIES=*
-      # [KUNCI 4] Mengamankan cookie session agar sinkron dengan HTTPS
       - SESSION_SECURE_COOKIE=true
     depends_on:
       - db

@@ -1,20 +1,30 @@
 FROM php:8.2-fpm
 
-# Install sistem dependensi dasar
+# Install dependensi sistem
 RUN apt-get update && apt-get install -y \
-    libzip-dev zip unzip git mariadb-client \
-    && docker-php-ext-install pdo pdo_mysql zip
+    git \
+    curl \
+    libpng-dev \
+    libonig-dev \
+    libxml2-dev \
+    zip \
+    unzip \
+    libzip-dev
 
-# Install Composer
+# Clear cache
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Install ekstensi PHP
+RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip
+
+# Ambil Composer terbaru
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+# Set working directory
 WORKDIR /var/www/html
-COPY . .
 
-# Install Laravel dependencies
-RUN composer install --no-dev --optimize-autoloader
+# Copy semua file project
+COPY . /var/www/html
 
-# Set owner folder untuk keamanan Nginx/PHP-FPM
+# Berikan hak akses awal
 RUN chown -R www-data:www-data /var/www/html
-
-CMD ["php-fpm"]
